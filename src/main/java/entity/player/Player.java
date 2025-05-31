@@ -36,7 +36,7 @@ public class Player {
     private Items equppedItem;
     private Inventory inventory;
     public static final int MAX_ENERGY = 100;
-    public static final int MIN_ENERGY = -20;
+    public static final int int MIN_ENERGY = -20;
     private IStatisticTracker statisticTracker;
     private GamePanel gp;
     private static int proposingDay;

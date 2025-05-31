@@ -23,7 +23,6 @@ import items.Crops;
 import items.Edible;
 import items.Food;
 import items.Items;
-import items.Misc;
 import items.Recipe;
 import items.Seed;
 import items.Sellable;
@@ -1531,7 +1530,7 @@ public class UI {
     }
 
     public void drawLoadScene(){
-        JOptionPane.showMessageDialog(gp, "This feature is still under development.", "Load Game", JOptionPane.INFORMATION_MESSAGE);
+        // This is replaced by direct loadGame() call
     }
 
     public int getItemIndexSlot() {

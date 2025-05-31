@@ -8,7 +8,7 @@ import items.Seed;
 public class KeyHandler implements KeyListener {
 
     GamePanel gp;
-    public boolean upPressed, downPressed, leftPressed, rightPressed, enterPressed, shiftPressed, spacePressed, escPressed, cPressed, iPressed, ePressed, hPressed;
+    public boolean upPressed, downPressed, leftPressed, rightPressed, enterPressed, shiftPressed, spacePressed, escPressed, cPressed, iPressed, ePressed, hPressed, pPressed, lPressed; // Added pPressed, lPressed
     boolean showDebugText = false;
     int lastNum = 0;
     int lastNum2 = 7;
@@ -61,7 +61,12 @@ public class KeyHandler implements KeyListener {
                 gp.playSE(19);
             } else if (keyCode == KeyEvent.VK_C) {
                 cPressed = true;
-            } else {
+            } else if (keyCode == KeyEvent.VK_P) { // P key for Save Game
+                pPressed = true;
+            } else if (keyCode == KeyEvent.VK_L) { // L key for Load Game
+                lPressed = true;
+            }
+            else {
                 playState(keyCode);
             }
         }
@@ -211,7 +216,8 @@ public class KeyHandler implements KeyListener {
                         gp.setupNewGame();
                     }
                     else if (gp.ui.commandNum == 1) {
-                        gp.ui.drawLoadScene();
+                        // gp.ui.drawLoadScene(); // This UI call is now a direct game load action
+                        gp.loadGame(); // Direct call to load game
                     }
                     else if (gp.ui.commandNum == 2) {
                         gp.ui.titleScreenState = 2;
@@ -427,7 +433,8 @@ public class KeyHandler implements KeyListener {
                         gp.setupNewGame();
                     }
                     else if (gp.ui.commandNum == 1) {
-                        gp.ui.drawLoadScene();
+                        // gp.ui.drawLoadScene(); // This UI call is now a direct game load action
+                        gp.loadGame(); // Direct call to load game
                     }
                     else if (gp.ui.commandNum == 2) {
                         gp.gameState = gp.helpState;
@@ -1131,6 +1138,12 @@ public class KeyHandler implements KeyListener {
                 break;
             case KeyEvent.VK_ENTER:
                 enterPressed = false;
+                break;
+            case KeyEvent.VK_P: // Release P key
+                pPressed = false;
+                break;
+            case KeyEvent.VK_L: // Release L key
+                lPressed = false;
                 break;
             default:
                 break;

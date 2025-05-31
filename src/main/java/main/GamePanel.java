@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
+import java.io.File; // Import File
 
 public class GamePanel extends JPanel implements Runnable {
     
@@ -73,6 +74,7 @@ public class GamePanel extends JPanel implements Runnable {
     public IStatisticProvider statisticProvider;
     public StatisticsManager manager = new StatisticsManager();
     public Farm farm;
+    public SaveLoadManager saveLoadManager; // Added SaveLoadManager
     
     
     // Game State
@@ -109,11 +111,14 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
         this.statisticTracker = manager;
         this.statisticProvider = manager;
+        this.saveLoadManager = new SaveLoadManager(this); // Initialize SaveLoadManager
     }
     
     public void setupGame() {
         playMusic(21);
         gameState = titleState;
+        // Ensure NPCData is initialized early for loading
+        NPCData.initialize(this);
     }
     
     public void setupNewGame() {
@@ -152,9 +157,9 @@ public class GamePanel extends JPanel implements Runnable {
         
         this.farm = new Farm(farmNameInput, this.playerData, this);
 
-        NPCData.initialize(this);
+        // NPCData is now initialized in setupGame
         
-        int randomMapIndex = (int) (Math.random() * 5) + 1;
+        this.randomMapIndex = (int) (Math.random() * 5) + 1; // Store randomMapIndex
         
         tileM = new TileManager(this, randomMapIndex);
         farm.getGameClock().startTime();
@@ -216,8 +221,17 @@ public class GamePanel extends JPanel implements Runnable {
                 alreadyProcessedCheatKey = true;
                 handleCheatActivation();
             }
+            else if (keyH.pPressed && !alreadyProcessedCheatKey) { // P key for Save Game
+                alreadyProcessedCheatKey = true;
+                saveGame();
+            }
+            else if (keyH.lPressed && !alreadyProcessedCheatKey) { // L key for Load Game
+                alreadyProcessedCheatKey = true;
+                loadGame();
+            }
 
-            if (farm.getGameClock().getHours() == 2) {
+
+            if (farm.getGameClock().getHours() == 2 && !playerData.isSleeping()) { // Check if not already sleeping
                 playerData.performAction("Sleep", null, null);
             }
 
@@ -248,6 +262,29 @@ public class GamePanel extends JPanel implements Runnable {
             alreadyProcessedCheatKey = false; 
         }
     }
+
+    // Save and Load methods
+    private void saveGame() {
+        String saveFileName = JOptionPane.showInputDialog(this, "Enter save file name (e.g., mygame.json):", "Save Game", JOptionPane.PLAIN_MESSAGE);
+        if (saveFileName != null && !saveFileName.trim().isEmpty()) {
+            saveLoadManager.saveGame(saveFileName.trim());
+        }
+        alreadyProcessedCheatKey = false;
+    }
+
+    private void loadGame() {
+        String loadFileName = JOptionPane.showInputDialog(this, "Enter load file name (e.g., mygame.json):", "Load Game", JOptionPane.PLAIN_MESSAGE);
+        if (loadFileName != null && !loadFileName.trim().isEmpty()) {
+            File saveFile = new File(loadFileName.trim());
+            if (saveFile.exists()) {
+                saveLoadManager.loadGame(loadFileName.trim());
+            } else {
+                ui.addMessage("Save file not found: " + loadFileName.trim());
+            }
+        }
+        alreadyProcessedCheatKey = false;
+    }
+
 
     public void paintComponent(Graphics g){
         super.paintComponent(g);

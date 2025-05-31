@@ -1,11 +1,11 @@
 package data; 
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Map;
 import java.util.HashMap;
-import main.GamePanel;
+import java.util.List;
+import java.util.Map;
+
 import entity.npc.Abigail;
 import entity.npc.Caroline;
 import entity.npc.Dasco;
@@ -19,6 +19,7 @@ import entity.npc.NPCEasterEgg4;
 import entity.npc.NPCEasterEgg5;
 import entity.npc.NPCEasterEgg6;
 import entity.npc.Perry;
+import main.GamePanel;
 
 public class NPCData {
 
