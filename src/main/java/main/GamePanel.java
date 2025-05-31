@@ -1,9 +1,18 @@
 package main;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import world.environment.Lighting;
 import actions.CookingAction;
 import data.NPCData;
 import entity.npc.NPC;
@@ -16,16 +25,7 @@ import statistics.StatisticsManager;
 import world.CropsPlanted;
 import world.Farm;
 import world.TileManager;
-
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.List;
-import java.awt.Font;
-import java.awt.image.BufferedImage;
-import java.io.File; // Import File
+import world.environment.Lighting; // Import File
 
 public class GamePanel extends JPanel implements Runnable {
     
@@ -272,7 +272,7 @@ public class GamePanel extends JPanel implements Runnable {
         alreadyProcessedCheatKey = false;
     }
 
-    private void loadGame() {
+    public void loadGame() {
         String loadFileName = JOptionPane.showInputDialog(this, "Enter load file name (e.g., mygame.json):", "Load Game", JOptionPane.PLAIN_MESSAGE);
         if (loadFileName != null && !loadFileName.trim().isEmpty()) {
             File saveFile = new File(loadFileName.trim());

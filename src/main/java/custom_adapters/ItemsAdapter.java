@@ -1,20 +1,36 @@
 package custom_adapters;
 
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonSerializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonParseException;
-import items.*;
-import items.equipment.*;
-import data.*; // Import all data managers
-
 import java.lang.reflect.Type;
 import java.util.Set;
-import java.util.stream.Collectors;
 
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext; // Added import for TypeToken
+import com.google.gson.JsonSerializer;
+import com.google.gson.reflect.TypeToken;
+
+import data.CropsData; // Import all data managers
+import data.EquipmentData;
+import data.FishData;
+import data.FishRarity;
+import data.FoodData;
+import data.MiscData;
+import data.SeedData;
+import items.ConcreteItem;
+import items.Crops;
+import items.Fish;
+import items.Food;
+import items.Items;
+import items.Misc;
+import items.Seed;
+import items.equipment.Equipment;
+import items.equipment.FishingRod;
+import items.equipment.Hoe;
+import items.equipment.Pickaxe;
+import items.equipment.WateringCan;
 public class ItemsAdapter implements JsonSerializer<Items>, JsonDeserializer<Items> {
 
     @Override

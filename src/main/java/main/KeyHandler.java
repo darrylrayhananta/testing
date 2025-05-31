@@ -524,18 +524,19 @@ public class KeyHandler implements KeyListener {
                     }
                     break;
                 case KeyEvent.VK_E:
-                    if(gp.playerData.getEquppedItem() == null) {
+                    // Corrected method name
+                    if(gp.playerData.getEquippedItem() == null) {
                         gp.ui.addMessage("You have no equipped item.");
-                    } else if (gp.playerData.getEquppedItem().getName().equals("Fishing Rod")) {
+                    } else if (gp.playerData.getEquippedItem().getName().equals("Fishing Rod")) {
                         gp.playerData.performAction("fish", null, null);
-                    } else if (gp.playerData.getEquppedItem().getName().equals("Pickaxe")) {
+                    } else if (gp.playerData.getEquippedItem().getName().equals("Pickaxe")) {
                         gp.playerData.performAction("recovering land", null, null);
-                    } else if (gp.playerData.getEquppedItem().getName().equals("Hoe")) {
+                    } else if (gp.playerData.getEquippedItem().getName().equals("Hoe")) {
                         gp.playerData.performAction("tilling", null, null);
-                    } else if (gp.playerData.getEquppedItem().getName().equals("Watering Can")) {
+                    } else if (gp.playerData.getEquippedItem().getName().equals("Watering Can")) {
                         gp.playerData.performAction("watering", null, null);
-                    } else if (gp.playerData.getEquppedItem() instanceof Seed) {
-                        gp.playerData.performAction("planting", lastState, gp.playerData.getEquppedItem());
+                    } else if (gp.playerData.getEquippedItem() instanceof Seed) {
+                        gp.playerData.performAction("planting", lastState, gp.playerData.getEquippedItem());
                     }
                     break;
                 case KeyEvent.VK_H:

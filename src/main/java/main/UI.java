@@ -450,16 +450,16 @@ public class UI {
         }
 
         // Season
-        if (gp.farm.getSeason().getCurrentSeason() == "Summer") {
+        if (gp.farm.getSeason().getCurrentSeason().equals("Summer")) {
             g2.drawImage(summer, x + gp.tileSize + gp.tileSize / 2 + gp.tileSize / 4 + gp.tileSize * 2 - gp.tileSize / 4 - gp.tileSize / 8, y + gp.tileSize * 2 - gp.tileSize / 2 - gp.tileSize / 4 - gp.tileSize / 4 - gp.tileSize / 8, gp.tileSize, gp.tileSize, null);
         } 
-        else if (gp.farm.getSeason().getCurrentSeason() == "Spring") {
+        else if (gp.farm.getSeason().getCurrentSeason().equals("Spring")) {
             g2.drawImage(spring, x + gp.tileSize + gp.tileSize / 2 + gp.tileSize / 4 + gp.tileSize * 2 - gp.tileSize / 4 - gp.tileSize / 8, y + gp.tileSize * 2 - gp.tileSize / 2 - gp.tileSize / 4 - gp.tileSize / 4 - gp.tileSize / 8, gp.tileSize, gp.tileSize, null);
         } 
-        else if (gp.farm.getSeason().getCurrentSeason() == "Fall") {
+        else if (gp.farm.getSeason().getCurrentSeason().equals("Fall")) {
             g2.drawImage(fall, x + gp.tileSize + gp.tileSize / 2 + gp.tileSize / 4 + gp.tileSize * 2 - gp.tileSize / 4 - gp.tileSize / 8, y + gp.tileSize * 2 - gp.tileSize / 2 - gp.tileSize / 4 - gp.tileSize / 4 - gp.tileSize / 8, gp.tileSize, gp.tileSize, null);
         } 
-        else if (gp.farm.getSeason().getCurrentSeason() == "Winter") {
+        else if (gp.farm.getSeason().getCurrentSeason().equals("Winter")) {
             g2.drawImage(winter, x + gp.tileSize + gp.tileSize / 2 + gp.tileSize / 4 + gp.tileSize * 2 - gp.tileSize / 4 - gp.tileSize / 8, y + gp.tileSize * 2 - gp.tileSize / 2 - gp.tileSize / 4 - gp.tileSize / 4 - gp.tileSize / 8, gp.tileSize, gp.tileSize, null);
         }
         

@@ -14,9 +14,9 @@ public class StatisticsManager implements IStatisticTracker, IStatisticProvider 
     private long totalExpenditure = 0;
     private int totalDaysPlayed = 0;
 
-    private Map<String, Integer> npcChatFrequencies;
-    private Map<String, Integer> npcGiftFrequencies;
-    private Map<String, Integer> npcVisitFrequencies;
+    private final Map<String, Integer> npcChatFrequencies;
+    private final Map<String, Integer> npcGiftFrequencies;
+    private final Map<String, Integer> npcVisitFrequencies;
     private final List<String> internalNpcNameList;
 
     private int totalCropsHarvested = 0;
@@ -29,7 +29,7 @@ public class StatisticsManager implements IStatisticTracker, IStatisticProvider 
     // Milestone
     private boolean goldMilestoneAchieved = false;
     private boolean marriageMilestoneAchieved = false;
-    private final int GOLD_MILESTONE_TARGET = 17209;
+    private final int GOLD_MILESTONE_TARGET = 17209; 
     private final int DAYS_PER_SEASON = 10;
     private int milestoneDays = 0;
     public List<String> allNPCNames = List.of(
@@ -154,6 +154,21 @@ public class StatisticsManager implements IStatisticTracker, IStatisticProvider 
     @Override
     public int getNPCVisitFrequency(String npcName) {
         return this.npcVisitFrequencies.getOrDefault(npcName, 0);
+    }
+
+    @Override
+    public Map<String, Integer> getNPCChatFrequencies() { // Added method
+        return Collections.unmodifiableMap(this.npcChatFrequencies);
+    }
+
+    @Override
+    public Map<String, Integer> getNPCGiftFrequencies() { // Added method
+        return Collections.unmodifiableMap(this.npcGiftFrequencies);
+    }
+
+    @Override
+    public Map<String, Integer> getNPCVisitFrequencies() { // Added method
+        return Collections.unmodifiableMap(this.npcVisitFrequencies);
     }
 
     @Override

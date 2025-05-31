@@ -15,6 +15,7 @@ public class SaveData {
     public int playerGold;
     public int playerWorldX;
     public int playerWorldY;
+    public int currentMap;
     public String equippedItemName;
     public Map<Items, Integer> inventory;
     public int proposingDay;
@@ -50,6 +51,7 @@ public class SaveData {
     public Map<String, Integer> npcVisitFrequencies;
     public int totalCropsHarvested;
     public int totalFishCaught;
+    // Added missing fields for fish rarity counts
     public int totalCommonFishCaught;
     public int totalRegularFishCaught;
     public int totalLegendaryFishCaught;
