@@ -15,16 +15,11 @@ import java.util.List;
 
 public class NPCAdapter implements JsonSerializer<NPC>, JsonDeserializer<NPC> {
 
-    private GamePanel gp; // Added constructor to pass GamePanel
+    private static GamePanel staticGp; // Use a static field to store GamePanel
 
-    public NPCAdapter(GamePanel gp) {
-        this.gp = gp;
-    }
-
-    // Default constructor for deserialization without GamePanel if needed elsewhere,
-    // but likely, you'll always need GamePanel for NPC instantiation.
-    public NPCAdapter() {
-        this.gp = null; // Set to null or handle appropriately if no GP context is available
+    // Method to set the GamePanel instance
+    public static void setGamePanel(GamePanel gp) {
+        staticGp = gp;
     }
 
     @Override
@@ -52,6 +47,14 @@ public class NPCAdapter implements JsonSerializer<NPC>, JsonDeserializer<NPC> {
             npc.setRelationshipStatus(relationshipStatus);
             return npc;
         } else {
+            // If NPC is not found, it means NPCData wasn't initialized with the correct GamePanel
+            // or the NPC name is invalid.
+            // For now, we throw an exception, but in a real game, you might want more robust error handling.
+            if (staticGp == null) {
+                 throw new JsonParseException("GamePanel not set for NPCAdapter, cannot deserialize NPC: " + npcName);
+            }
+            // If staticGp is set, it might be an unrecognized NPC, or data issue.
+            // You might need to re-initialize NPCData or handle new NPCs.
             throw new JsonParseException("Could not find NPC with name: " + npcName + " during deserialization.");
         }
     }

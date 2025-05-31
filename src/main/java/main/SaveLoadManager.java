@@ -39,10 +39,15 @@ public class SaveLoadManager {
         gsonBuilder.registerTypeAdapter(Point.class, new PointAdapter());
         gsonBuilder.registerTypeAdapter(Items.class, new ItemsAdapter());
         gsonBuilder.registerTypeAdapter(Inventory.class, new InventoryAdapter());
-        gsonBuilder.registerTypeAdapter(NPC.class, new NPCAdapter());
-        gsonBuilder.registerTypeAdapter(CropsPlanted.class, new CropsPlantedAdapter());
+        // Pass GamePanel to custom adapters that need it
+        gsonBuilder.registerTypeAdapter(NPC.class, new NPCAdapter()); // No need to pass gp here directly as it uses a static method
+        gsonBuilder.registerTypeAdapter(CropsPlanted.class, new CropsPlantedAdapter()); // No need to pass gp here directly as it uses a static method
         this.gson = gsonBuilder.setPrettyPrinting().create();
         this.executor = Executors.newSingleThreadScheduledExecutor();
+
+        // Set the static GamePanel instances for the adapters
+        NPCAdapter.setGamePanel(gp);
+        CropsPlantedAdapter.setGamePanel(gp);
     }
 
     public void saveGame(String filePath) {
@@ -122,6 +127,10 @@ public class SaveLoadManager {
                     gp.ui.addMessage("Save file is empty or corrupted.");
                     return;
                 }
+
+                // Initialize NPCData before loading any NPC-related data
+                // This ensures all NPC instances are created and available for deserialization
+                NPCData.initialize(gp);
 
                 // Restore Player data
                 gp.playerData.setName(data.playerName);

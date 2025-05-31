@@ -17,10 +17,11 @@ import java.lang.reflect.Type;
 
 public class CropsPlantedAdapter implements JsonSerializer<CropsPlanted>, JsonDeserializer<CropsPlanted> {
 
-    private GamePanel gp; // To pass to CropsPlanted constructor
+    private static GamePanel staticGp; // Static GamePanel reference
 
-    public CropsPlantedAdapter(GamePanel gp) {
-        this.gp = gp;
+    // Method to set the GamePanel instance
+    public static void setGamePanel(GamePanel gp) {
+        staticGp = gp;
     }
 
     @Override
@@ -38,6 +39,10 @@ public class CropsPlantedAdapter implements JsonSerializer<CropsPlanted>, JsonDe
 
     @Override
     public CropsPlanted deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        if (staticGp == null) {
+            throw new JsonParseException("GamePanel not set for CropsPlantedAdapter, cannot deserialize CropsPlanted.");
+        }
+
         JsonObject jsonObject = json.getAsJsonObject();
         int x = jsonObject.get("x").getAsInt();
         int y = jsonObject.get("y").getAsInt();
@@ -53,6 +58,7 @@ public class CropsPlantedAdapter implements JsonSerializer<CropsPlanted>, JsonDe
         }
 
         // Use the constructor that allows setting all states
+        // Pass the staticGp here
         CropsPlanted cropsPlanted = new CropsPlanted(x, y, seed, wateredThisDay, growthStage, readyToHarvest, daysUnwatered);
         return cropsPlanted;
     }

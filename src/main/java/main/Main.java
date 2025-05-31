@@ -1,6 +1,8 @@
 package main;
 
 import javax.swing.JFrame;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class Main {
     public static void main(String[] args) {
@@ -20,5 +22,14 @@ public class Main {
 
         gamePanel.setupGame();
         gamePanel.startGameThread();
+
+        // Add a WindowListener to shut down the executor when the window is closed
+        window.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                gamePanel.saveLoadManager.shutdownExecutor();
+                System.exit(0);
+            }
+        });
     }
 }

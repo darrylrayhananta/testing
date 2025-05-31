@@ -1,4 +1,4 @@
-package data; 
+package data;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import custom_adapters.NPCAdapter; // Import NPCAdapter
 import entity.npc.Abigail;
 import entity.npc.Caroline;
 import entity.npc.Dasco;
@@ -29,7 +30,7 @@ public class NPCData {
 
     public static void initialize(GamePanel gp) {
         if (initialized) return;
-        
+
         addNPC(new MayorTadi(gp));
         addNPC(new Caroline(gp));
         addNPC(new Perry(gp));
@@ -42,6 +43,10 @@ public class NPCData {
         addNPC(new NPCEasterEgg4(gp));
         addNPC(new NPCEasterEgg5(gp));
         addNPC(new NPCEasterEgg6(gp));
+
+        // Set the GamePanel instance in NPCAdapter after all NPCs are initialized
+        // This ensures the adapter can use it during deserialization
+        NPCAdapter.setGamePanel(gp);
         
         initialized = true;
     }
