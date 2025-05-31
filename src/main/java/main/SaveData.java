@@ -3,7 +3,6 @@ package main;
 import java.util.Collection;
 import java.util.Map;
 
-import items.Items;
 import world.CropsPlanted;
 
 // This class acts as a data transfer object for saving and loading game state.
@@ -17,7 +16,10 @@ public class SaveData {
     public int playerWorldY;
     public int currentMap;
     public String equippedItemName;
-    public Map<Items, Integer> inventory;
+    // --- START MODIFICATION ---
+    public Map<String, Integer> inventoryItemQuantities; // Store item name -> quantity
+    public Map<String, String> inventoryItemTypes; // Store item name -> type for reconstruction
+    // --- END MODIFICATION ---
     public int proposingDay;
     public String partnerName;
 
