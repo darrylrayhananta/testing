@@ -1,19 +1,22 @@
 package main;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.awt.Font;
-import java.awt.FontFormatException;
-import java.awt.Color;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
+
 import data.CropsData;
-import data.FoodData;
+import data.FoodData; // Ensure this import is present and correct
 import data.MiscData;
 import data.NPCData;
 import data.RecipeData;
@@ -22,13 +25,12 @@ import entity.npc.NPC;
 import items.Crops;
 import items.Edible;
 import items.Food;
-import items.Items;
+import items.Items; // Explicitly import Misc
+import items.Misc;
 import items.Recipe;
 import items.Seed;
 import items.Sellable;
 import items.equipment.Equipment;
-
-import java.util.HashMap;
 
 public class UI {
     
@@ -704,7 +706,8 @@ public class UI {
             BufferedImage itemImage = item.getItemImage();
             if (itemImage != null) {
                 g2.drawImage(itemImage, slotX, slotY, gp.tileSize, gp.tileSize, null);
-                if (item == gp.playerData.getEquppedItem()) {
+                // Corrected method name from getEquppedItem() to getEquippedItem()
+                if (item == gp.playerData.getEquippedItem()) {
                     g2.drawImage(equipedItem, slotX, slotY, gp.tileSize, gp.tileSize, null);
                 }
             }
@@ -742,11 +745,11 @@ public class UI {
                     gp.playSE(4);
                 }
                 else if (selectedItem instanceof Seed || selectedItem instanceof Equipment){
-                    if (gp.playerData.getEquppedItem() == selectedItem) {
-                        gp.playerData.setEquppedItem(null);
+                    if (gp.playerData.getEquippedItem() == selectedItem) {
+                        gp.playerData.setEquippedItem(null);
                         addMessage("Unequipped " + selectedItem.getName() + ".");
                     } else {
-                        gp.playerData.setEquppedItem(selectedItem);
+                        gp.playerData.setEquippedItem(selectedItem);
                         addMessage("Equipped " + selectedItem.getName() + ".");
                         addMessage("Press 'E' to use the equipped item.");
                     }
@@ -913,9 +916,9 @@ public class UI {
                 }
             }
         }
-        else if (storeSection == 3){
+        else if (storeSection == 3){ // Misc store section
             g2.drawImage(miscStore, x + gp.tileSize, y + gp.tileSize, width, height, null);
-            List<Misc> allMisc = MiscData.getAllMiscItems();
+            List<Misc> allMisc = MiscData.getAllMiscItems(); // This should correctly resolve now with Misc import
             List<Items> miscList = new ArrayList<>();
             for (Misc misc : allMisc) {
                 if (misc.getBuyPrice() > 0) {
@@ -941,13 +944,10 @@ public class UI {
                 if (itemIndex < miscList.size()) {
                     Items selectedItem = miscList.get(itemIndex);
                     String itemName = selectedItem.getName();
-                    Misc selectedMisc = (Misc) selectedItem;
+                    Misc selectedMisc = (Misc) selectedItem; // This should correctly resolve now
                     String itemPrice = String.valueOf(selectedMisc.getBuyPrice());
                     g2.drawString(itemName, textX, textY + gp.tileSize * 6);
                     g2.drawString("Price: " + itemPrice, textX, textY + gp.tileSize * 6 + gp.tileSize / 2);
-                    if (itemName.equals("Proposal Ring")) {
-                        isOwned = gp.playerData.getInventory().checkInventory().containsKey(selectedItem);
-                    }
                     if (gp.keyH.enterPressed) {
                         if (gp.playerData.getGold() >= selectedMisc.getBuyPrice() && !isOwned) {
                             gp.playerData.performAction("buy", itemPrice, selectedItem);
