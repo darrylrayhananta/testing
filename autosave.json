@@ -1,12 +1,13 @@
 {
-  "playerName": "a",
+  "playerName": "aa",
   "playerGender": "Male",
-  "playerEnergy": 100,
-  "playerGold": 500,
-  "playerWorldX": 705,
-  "playerWorldY": 450,
+  "playerEnergy": 60,
+  "playerGold": 0,
+  "playerWorldX": 210,
+  "playerWorldY": 594,
   "currentMap": 0,
   "inventoryItemQuantities": {
+    "Firewood": 1,
     "Parsnip Seeds": 15,
     "Watering Can": 1,
     "Pickaxe": 1,
@@ -14,6 +15,7 @@
     "Hoe": 1
   },
   "inventoryItemTypes": {
+    "Firewood": "Misc",
     "Parsnip Seeds": "Seed",
     "Watering Can": "Equipment",
     "Pickaxe": "Equipment",
@@ -21,14 +23,14 @@
     "Hoe": "Equipment"
   },
   "proposingDay": 0,
-  "farmName": "a",
+  "farmName": "aaaaaa",
   "day": 1,
   "currentSeason": "Summer",
   "currentSeasonDayCounter": 0,
-  "currentWeather": "Sunny",
-  "rainyDaysThisSeason": 0,
-  "gameClockHours": 22,
-  "gameClockMinutes": 40,
+  "currentWeather": "Rainy",
+  "rainyDaysThisSeason": 1,
+  "gameClockHours": 9,
+  "gameClockMinutes": 25,
   "randomMapIndex": 2,
   "npcHeartPoints": {
     "Mayor Tadi": 0,
@@ -41,7 +43,7 @@
     "NPCEasterEgg2": 0,
     "NPCEasterEgg3": 0,
     "NPCEasterEgg1": 0,
-    "Caroline": 0,
+    "Caroline": 100,
     "Dasco": 0
   },
   "npcRelationshipStatus": {
@@ -73,7 +75,7 @@
     "recipe_10": false
   },
   "totalIncome": 0,
-  "totalExpenditure": 0,
+  "totalExpenditure": 500,
   "totalDaysPlayed": 0,
   "npcChatFrequencies": {
     "Mayor Tadi": 0,
@@ -88,7 +90,7 @@
     "Emily": 0,
     "Perry": 0,
     "Abigail": 0,
-    "Caroline": 0,
+    "Caroline": 4,
     "Dasco": 0
   },
   "npcVisitFrequencies": {
@@ -96,7 +98,7 @@
     "Emily": 0,
     "Perry": 0,
     "Abigail": 0,
-    "Caroline": 0,
+    "Caroline": 1,
     "Dasco": 0
   },
   "totalCropsHarvested": 0,

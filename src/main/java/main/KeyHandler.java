@@ -8,7 +8,7 @@ import items.Seed;
 public class KeyHandler implements KeyListener {
 
     GamePanel gp;
-    public boolean upPressed, downPressed, leftPressed, rightPressed, enterPressed, shiftPressed, spacePressed, escPressed, cPressed, iPressed, ePressed, hPressed, pPressed, lPressed; // Added pPressed, lPressed
+    public boolean upPressed, downPressed, leftPressed, rightPressed, enterPressed, shiftPressed, spacePressed, escPressed, cPressed, iPressed, ePressed, hPressed, pPressed, lPressed;
     boolean showDebugText = false;
     int lastNum = 0;
     int lastNum2 = 7;
@@ -61,9 +61,9 @@ public class KeyHandler implements KeyListener {
                 gp.playSE(19);
             } else if (keyCode == KeyEvent.VK_C) {
                 cPressed = true;
-            } else if (keyCode == KeyEvent.VK_P) { // P key for Save Game
+            } else if (keyCode == KeyEvent.VK_P) {
                 pPressed = true;
-            } else if (keyCode == KeyEvent.VK_L) { // L key for Load Game
+            } else if (keyCode == KeyEvent.VK_L) {
                 lPressed = true;
             }
             else {
@@ -122,7 +122,7 @@ public class KeyHandler implements KeyListener {
         else if (gp.gameState == gp.buyingState){
             buyingState(keyCode);
         }
-        else if (gp.gameState == gp.statsDisplayState) { // Tambahkan blok ini
+        else if (gp.gameState == gp.statsDisplayState) {
             if (keyCode == KeyEvent.VK_ENTER || keyCode == KeyEvent.VK_ESCAPE) {
                 gp.gameState = gp.playState;
                 gp.playSE(3);
@@ -216,14 +216,13 @@ public class KeyHandler implements KeyListener {
                         gp.setupNewGame();
                     }
                     else if (gp.ui.commandNum == 1) {
-                        // gp.ui.drawLoadScene(); // This UI call is now a direct game load action
-                        gp.loadGame(); // Direct call to load game
+                        // Memuat otomatis autosave.json tanpa prompt
+                        gp.loadGame("autosave.json"); //
                     }
                     else if (gp.ui.commandNum == 2) {
                         gp.ui.titleScreenState = 2;
                     }
                     else if (gp.ui.commandNum == 3) {
-                        // Exit
                         System.exit(0);
                     }
                     else if (gp.ui.commandNum == 4) {
@@ -433,8 +432,7 @@ public class KeyHandler implements KeyListener {
                         gp.setupNewGame();
                     }
                     else if (gp.ui.commandNum == 1) {
-                        // gp.ui.drawLoadScene(); // This UI call is now a direct game load action
-                        gp.loadGame(); // Direct call to load game
+                        gp.loadGame("autosave.json"); //
                     }
                     else if (gp.ui.commandNum == 2) {
                         gp.gameState = gp.helpState;
@@ -452,7 +450,8 @@ public class KeyHandler implements KeyListener {
                         gp.gameState = gp.statisticState;
                     }
                     else if (gp.ui.commandNum == 7) {
-                        // Exit
+                        // Exit: Save game before returning to title
+                        gp.saveGame("autosave.json"); //
                         gp.gameState = gp.titleState;
                         gp.ui.titleScreenState = 0;
                         gp.ui.commandNum = 0;
@@ -524,7 +523,6 @@ public class KeyHandler implements KeyListener {
                     }
                     break;
                 case KeyEvent.VK_E:
-                    // Corrected method name
                     if(gp.playerData.getEquippedItem() == null) {
                         gp.ui.addMessage("You have no equipped item.");
                     } else if (gp.playerData.getEquippedItem().getName().equals("Fishing Rod")) {
@@ -1140,10 +1138,10 @@ public class KeyHandler implements KeyListener {
             case KeyEvent.VK_ENTER:
                 enterPressed = false;
                 break;
-            case KeyEvent.VK_P: // Release P key
+            case KeyEvent.VK_P:
                 pPressed = false;
                 break;
-            case KeyEvent.VK_L: // Release L key
+            case KeyEvent.VK_L:
                 lPressed = false;
                 break;
             default:

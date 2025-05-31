@@ -47,10 +47,9 @@ public class SaveLoadManager {
         CropsPlantedAdapter.setGamePanel(gp);
     }
 
-    // Metode saveGame yang diperbarui
     public void saveGame(String filePath) {
         executor.submit(() -> {
-            System.out.println("Attempting to save game to: " + filePath); // Log mulai menyimpan
+            System.out.println("Attempting to save game to: " + filePath);
             try (FileWriter writer = new FileWriter(filePath)) {
                 SaveData data = new SaveData();
                 data.playerName = gp.playerData.getName();
@@ -70,7 +69,6 @@ public class SaveLoadManager {
                 data.proposingDay = Player.getProposingDay();
                 data.partnerName = (gp.playerData.getPartner() != null) ? gp.playerData.getPartner().getNPCName() : null;
 
-                // Memastikan objek farm tidak null saat menyimpan datanya
                 if (gp.farm != null) {
                     data.farmName = gp.farm.getFarmName();
                     data.day = gp.farm.getDay();
@@ -80,19 +78,18 @@ public class SaveLoadManager {
                     data.rainyDaysThisSeason = gp.farm.getWeather().getRainyDaysThisSeason();
                     data.gameClockHours = gp.farm.getGameClock().getHours();
                     data.gameClockMinutes = gp.farm.getGameClock().getMinutes();
-                    data.randomMapIndex = gp.randomMapIndex; // randomMapIndex dari GamePanel
+                    data.randomMapIndex = gp.randomMapIndex;
                     data.plantedCrops = gp.farm.getFieldManager().getAllPlantedCrops();
                 } else {
-                    // Set default atau null jika farm belum diinisialisasi (misalnya saat di Title Screen)
                     data.farmName = null;
-                    data.day = 0; // Atau nilai default lainnya
+                    data.day = 0;
                     data.currentSeason = "Spring";
                     data.currentSeasonDayCounter = 0;
                     data.currentWeather = "Sunny";
                     data.rainyDaysThisSeason = 0;
                     data.gameClockHours = 6;
                     data.gameClockMinutes = 0;
-                    data.randomMapIndex = 0; // Atau nilai default lainnya
+                    data.randomMapIndex = 0;
                     data.plantedCrops = null;
                 }
 
@@ -124,25 +121,24 @@ public class SaveLoadManager {
                 data.milestoneDays = gp.manager.getMilestoneDays();
 
                 gson.toJson(data, writer);
-                writer.flush(); // Pastikan data ditulis ke disk
-                System.out.println("Data serialized to JSON. File written successfully: " + filePath); // Log sukses menulis
+                writer.flush();
+                System.out.println("Data serialized to JSON. File written successfully: " + filePath);
                 gp.ui.addMessage("Game saved successfully!");
             } catch (IOException e) {
-                System.err.println("IOException during saving to " + filePath + ": " + e.getMessage()); // Log error IO
+                System.err.println("IOException during saving to " + filePath + ": " + e.getMessage());
                 e.printStackTrace();
                 gp.ui.addMessage("Failed to save game: " + e.getMessage());
             } catch (Exception e) {
-                System.err.println("General Exception during saving to " + filePath + ": " + e.getMessage()); // Log error umum
+                System.err.println("General Exception during saving to " + filePath + ": " + e.getMessage());
                 e.printStackTrace();
                 gp.ui.addMessage("Error during game saving: " + e.getMessage());
             }
         });
     }
 
-    // Metode loadGame (tetap sama dari sebelumnya)
     public void loadGame(String filePath) {
         executor.submit(() -> {
-            System.out.println("Attempting to load game from: " + filePath); // Log mulai memuat
+            System.out.println("Attempting to load game from: " + filePath);
             try (FileReader reader = new FileReader(filePath)) {
                 SaveData data = gson.fromJson(reader, SaveData.class);
 
@@ -151,11 +147,12 @@ public class SaveLoadManager {
                     return;
                 }
 
-                // Inisialisasi gp.playerData jika masih null
                 String loadedFarmName = (data.farmName != null) ? data.farmName : "Default Farm";
                 if (gp.playerData == null) {
                      gp.playerData = new Player(data.playerName, data.playerGender, loadedFarmName, data.playerGold, gp);
                 }
+
+                gp.player = new PlayerUI(gp, gp.keyH, gp.playerData);
 
                 NPCData.initialize(gp);
 
@@ -198,7 +195,6 @@ public class SaveLoadManager {
                     gp.playerData.setPartner(null);
                 }
 
-                // Inisialisasi farm hanya jika data farm tersedia dari save
                 if (data.farmName != null) {
                     gp.farm = new Farm(data.farmName, gp.playerData, gp);
                     gp.farm.setDay(data.day);
@@ -211,12 +207,18 @@ public class SaveLoadManager {
                     gp.randomMapIndex = data.randomMapIndex;
                     gp.tileM = new TileManager(gp, gp.randomMapIndex);
                 } else {
-                    // Jika data farm tidak ada, set ke default (New Game behavior)
-                    gp.setupNewGame(); // Ini mungkin akan memunculkan dialog New Game lagi.
-                                      // Jika tidak diinginkan, inisialisasi manual seperti di setupNewGame
-                    System.err.println("Warning: Farm data not found in save file. Starting new farm setup.");
+                    System.err.println("Warning: Farm data not found in save file. Setting up a new farm with default values.");
+                    gp.farm = new Farm("Default Farm", gp.playerData, gp);
+                    gp.farm.setDay(1);
+                    gp.farm.getSeason().setSeason("Summer");
+                    gp.farm.getWeather().setWeather("Sunny");
+                    gp.farm.getGameClock().skipToMorning();
+                    gp.tileM = new TileManager(gp, gp.randomMapIndex);
+                    gp.aSetter.setObject(gp.randomMapIndex);
+                    gp.aSetter.setNPC();
+                    gp.eHandler = new EventHandler(gp, gp.randomMapIndex); // Inisialisasi EventHandler di sini jika farm baru
+                    gp.lightingSystem.resetDay();
                 }
-
 
                 for (Map.Entry<String, Integer> entry : data.npcHeartPoints.entrySet()) {
                     NPC npc = NPCData.getNPCByName(entry.getKey());
@@ -231,7 +233,6 @@ public class SaveLoadManager {
                     }
                 }
 
-                // Pastikan FieldManager tidak null sebelum memanggil setPlantedCrops
                 if (gp.farm != null && gp.farm.getFieldManager() != null) {
                     gp.farm.getFieldManager().setPlantedCrops(data.plantedCrops);
                 }
@@ -258,17 +259,23 @@ public class SaveLoadManager {
                 gp.aSetter.setObject(gp.randomMapIndex);
                 gp.aSetter.setNPC();
 
-                gp.player = new PlayerUI(gp, gp.keyH, gp.playerData); 
+                // --- START NEW FIX: Initialize gp.eHandler only if farm data was loaded ---
+                // If farm data was loaded (data.farmName != null), then gp.randomMapIndex is from save.
+                // Otherwise, it was set up by the "new farm" block.
+                if (data.farmName != null) { // Only re-initialize if it was loaded from save.
+                    gp.eHandler = new EventHandler(gp, gp.randomMapIndex); //
+                }
+                // --- END NEW FIX ---
 
                 gp.gameState = gp.playState;
                 gp.ui.addMessage("Game loaded successfully!");
-                System.out.println("Game loaded successfully from: " + filePath); // Log sukses memuat
+                System.out.println("Game loaded successfully from: " + filePath);
             } catch (IOException e) {
-                System.err.println("IOException during loading from " + filePath + ": " + e.getMessage()); // Log error IO
+                System.err.println("IOException during loading from " + filePath + ": " + e.getMessage());
                 e.printStackTrace();
                 gp.ui.addMessage("Failed to load game: " + e.getMessage());
             } catch (Exception e) {
-                System.err.println("General Exception during loading from " + filePath + ": " + e.getMessage()); // Log error umum
+                System.err.println("General Exception during loading from " + filePath + ": " + e.getMessage());
                 e.printStackTrace();
                 gp.ui.addMessage("Error during game loading: " + e.getMessage());
             }

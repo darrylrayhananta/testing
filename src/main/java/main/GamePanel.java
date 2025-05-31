@@ -25,7 +25,7 @@ import statistics.StatisticsManager;
 import world.CropsPlanted;
 import world.Farm;
 import world.TileManager;
-import world.environment.Lighting; // Import File
+import world.environment.Lighting;
 
 public class GamePanel extends JPanel implements Runnable {
     
@@ -74,7 +74,7 @@ public class GamePanel extends JPanel implements Runnable {
     public IStatisticProvider statisticProvider;
     public StatisticsManager manager = new StatisticsManager();
     public Farm farm;
-    public SaveLoadManager saveLoadManager; // Added SaveLoadManager
+    public SaveLoadManager saveLoadManager;
     
     
     // Game State
@@ -111,13 +111,12 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
         this.statisticTracker = manager;
         this.statisticProvider = manager;
-        this.saveLoadManager = new SaveLoadManager(this); // Initialize SaveLoadManager
+        this.saveLoadManager = new SaveLoadManager(this);
     }
     
     public void setupGame() {
         playMusic(21);
         gameState = titleState;
-        // Ensure NPCData is initialized early for loading
         NPCData.initialize(this);
     }
     
@@ -157,9 +156,7 @@ public class GamePanel extends JPanel implements Runnable {
         
         this.farm = new Farm(farmNameInput, this.playerData, this);
 
-        // NPCData is now initialized in setupGame
-        
-        this.randomMapIndex = (int) (Math.random() * 5) + 1; // Store randomMapIndex
+        this.randomMapIndex = (int) (Math.random() * 5) + 1;
         
         tileM = new TileManager(this, randomMapIndex);
         farm.getGameClock().startTime();
@@ -221,17 +218,19 @@ public class GamePanel extends JPanel implements Runnable {
                 alreadyProcessedCheatKey = true;
                 handleCheatActivation();
             }
-            else if (keyH.pPressed && !alreadyProcessedCheatKey) { // P key for Save Game
+            else if (keyH.pPressed && !alreadyProcessedCheatKey) {
                 alreadyProcessedCheatKey = true;
-                saveGame();
+                // Mengubah panggilan saveGame untuk menerima argumen
+                saveGame("manual_save.json"); // Anda bisa ganti nama ini jika perlu
             }
-            else if (keyH.lPressed && !alreadyProcessedCheatKey) { // L key for Load Game
+            else if (keyH.lPressed && !alreadyProcessedCheatKey) {
                 alreadyProcessedCheatKey = true;
-                loadGame();
+                // Mengubah panggilan loadGame untuk menerima argumen
+                loadGame("autosave.json"); // Memuat otomatis autosave.json
             }
 
 
-            if (farm.getGameClock().getHours() == 2 && !playerData.isSleeping()) { // Check if not already sleeping
+            if (farm.getGameClock().getHours() == 2 && !playerData.isSleeping()) {
                 playerData.performAction("Sleep", null, null);
             }
 
@@ -263,24 +262,19 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    // Save and Load methods
-    private void saveGame() {
-        String saveFileName = JOptionPane.showInputDialog(this, "Enter save file name (e.g., mygame.json):", "Save Game", JOptionPane.PLAIN_MESSAGE);
-        if (saveFileName != null && !saveFileName.trim().isEmpty()) {
-            saveLoadManager.saveGame(saveFileName.trim());
-        }
+    // Mengubah metode saveGame agar menerima filePath sebagai argumen
+    public void saveGame(String filePath) {
+        saveLoadManager.saveGame(filePath);
         alreadyProcessedCheatKey = false;
     }
 
-    public void loadGame() {
-        String loadFileName = JOptionPane.showInputDialog(this, "Enter load file name (e.g., mygame.json):", "Load Game", JOptionPane.PLAIN_MESSAGE);
-        if (loadFileName != null && !loadFileName.trim().isEmpty()) {
-            File saveFile = new File(loadFileName.trim());
-            if (saveFile.exists()) {
-                saveLoadManager.loadGame(loadFileName.trim());
-            } else {
-                ui.addMessage("Save file not found: " + loadFileName.trim());
-            }
+    // Mengubah metode loadGame agar menerima filePath sebagai argumen
+    public void loadGame(String filePath) {
+        File saveFile = new File(filePath);
+        if (saveFile.exists()) {
+            saveLoadManager.loadGame(filePath);
+        } else {
+            ui.addMessage("Save file not found: " + filePath);
         }
         alreadyProcessedCheatKey = false;
     }
@@ -290,7 +284,6 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        // TITLE SCREEN
         if (gameState == titleState) {
             ui.draw(g2);
         }
@@ -299,7 +292,6 @@ public class GamePanel extends JPanel implements Runnable {
                 ui.drawSleeping();
                 return;
             }
-            // TILE
             tileM.draw(g2);
 
             if (currentMap == 0 && farm != null && farm.getFieldManager() != null) {
@@ -325,40 +317,32 @@ public class GamePanel extends JPanel implements Runnable {
                 }
             }
     
-            // Object
             for (int i = 0; i < objects[currentMap].length; i++) {
                 if (objects[currentMap][i] != null) {
                     objects[currentMap][i].draw(g2, this);
                 }
             }
             
-            // NPC
             for (int i = 0; i < npcs[currentMap].length; i++) {
                 if (npcs[currentMap][i] != null) {
                     npcs[currentMap][i].draw(g2, this);
                 }
             }
 
-            // COOKING ACTIONS
             for (int i = activeCookingActions.size() - 1; i >= 0; i--) {
                 activeCookingActions.get(i).update();
             }
 
             
-            // PLAYER
             player.draw(g2);
 
-            // LIGHTING
             if (lightingSystem != null) {
             lightingSystem.draw(g2);
             }
     
-            // UI
             ui.draw(g2);
         }
 
-
-        // Debugging
         if (keyH.showDebugText) {
             g2.setFont(new Font("Helvetica", Font.PLAIN, 20));
             g2.setColor(Color.white);
